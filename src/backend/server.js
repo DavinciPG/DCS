@@ -3,6 +3,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const sessionHandler = require('express-session');
+const MongoStore = require('connect-mongo');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -16,7 +17,11 @@ const server = express();
 server.use(sessionHandler({
     secret: process.env.SESSION_SECRET,
     cookie: { maxAge: 30000 },
-    saveUninitialized: false
+    saveUninitialized: false,
+    resave: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URI
+    })
 }));
 
 server.use(logger('dev'));

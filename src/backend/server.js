@@ -16,7 +16,9 @@ const server = express();
 // session handling
 server.use(sessionHandler({
     secret: process.env.SESSION_SECRET,
-    cookie: { maxAge: 30000 },
+    cookie: {
+        maxAge: 1000 * 60 * 60 * 24 * 7 // 1000 ms * 60s * 60m * 24h * 7d = 7d worth of seconds
+    },
     saveUninitialized: false,
     resave: false,
     store: MongoStore.create({

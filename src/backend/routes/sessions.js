@@ -5,7 +5,7 @@ const xata = require('../config/config');
 const bcrypt = require('bcrypt');
 const saltRounds= 10;
 
-const { verifySession } = require("../controllers/sessionController");
+const { verifySession, deleteSession } = require("../controllers/sessionController");
 
 async function verifyUsernameInput(input) {
     // username length is 3,16 char
@@ -18,21 +18,21 @@ async function verifyUsernameInput(input) {
 
 router.post('/', async (req, res) => {
     if(req.session && req.session.authenticated)
-       return res.status(400).send({ message: 'User already logged in.' });
+       return res.status(400).json({ message: 'User already logged in.' });
 
     const { username, password } = req.body;
 
     const verifiedInput = await verifyUsernameInput(username);
     if(!verifiedInput)
-        return res.status(400).send({ message: 'Bad username.' });
+        return res.status(400).json({ message: 'Bad username.' });
 
     const databaseUser = await xata.db.users.filter({username}).getFirst();
     if(!databaseUser)
-        return res.status(400).send({ message: 'User not found.' });
+        return res.status(400).json({ message: 'User not found.' });
 
     const passwordCompare = await bcrypt.compare(password, databaseUser.password);
     if(!passwordCompare)
-        return res.status(400).send({ message: 'Password incorrect.' });
+        return res.status(400).json({ message: 'Password incorrect.' });
 
     req.session.authenticated = true;
     req.session.user = {
@@ -40,7 +40,9 @@ router.post('/', async (req, res) => {
         username: databaseUser.username
     };
 
-    res.status(201).send({ message: 'Successful login.' });
+    res.status(201).json({ message: 'Successful login.' });
 });
+
+router.delete('/', verifySession, deleteSession);
 
 module.exports = router;

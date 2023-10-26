@@ -10,6 +10,19 @@ const verifySession = (req, res, next) => {
     }
 };
 
+const deleteSession = (req, res) => {
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                res.status(500).json({ message: 'Internal Server Error' });
+            } else {
+                res.status(200).json({ message: 'Logged out successfully' });
+            }
+        });
+    }
+};
+
 module.exports = {
-    verifySession
+    verifySession,
+    deleteSession
 }

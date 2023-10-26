@@ -3,20 +3,13 @@ const router = express.Router();
 const xata = require('../config/config');
 
 const bcrypt = require('bcrypt');
-const saltRounds= 10;
+
+const { verifyUsernameInput } = require('../controllers/userController');
 
 const { verifySession, deleteSession } = require("../controllers/sessionController");
 
-async function verifyUsernameInput(input) {
-    // username length is 3,16 char
-    const regex = /^[a-zA-Z0-9_-]{3,16}$/;
-    if(!regex.test(input))
-        return false;
-
-    return true;
-}
-
 router.post('/', async (req, res) => {
+   try {
     if(req.session && req.session.authenticated)
        return res.status(400).json({ message: 'User already logged in.' });
 
@@ -41,6 +34,10 @@ router.post('/', async (req, res) => {
     };
 
     res.status(201).json({ message: 'Successful login.' });
+   } catch (err) {
+       console.error(err);
+       res.status(500).json({ message: 'Internal Server Error.' });
+   }
 });
 
 router.delete('/', verifySession, deleteSession);

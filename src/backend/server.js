@@ -32,7 +32,7 @@ server.use(express.urlencoded({ extended: false }));
 server.use(cookieParser());
 
 server.use('/sessions', sessionsRouter);
-//server.use('/users', usersRouter);
+server.use('/users', usersRouter);
 //server.use('/documents', documentsRouter);
 
 module.exports = server;

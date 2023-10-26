@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const sessionHandler = require('express-session');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -10,6 +11,13 @@ const usersRouter = require('./routes/users');
 const documentsRouter = require('./routes/documents');
 
 const server = express();
+
+// session handling
+server.use(sessionHandler({
+    secret: process.env.SESSION_SECRET,
+    cookie: { maxAge: 30000 },
+    saveUninitialized: false
+}));
 
 server.use(logger('dev'));
 server.use(express.json());

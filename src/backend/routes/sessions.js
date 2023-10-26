@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
         username: databaseUser.username
     };
 
-    res.status(201).json({ message: 'Successful login.' });
+    res.status(200).json({ message: 'Successful login.' });
    } catch (err) {
        console.error(err);
        res.status(500).json({ message: 'Internal Server Error.' });

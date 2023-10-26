@@ -14,24 +14,23 @@ const tables = [
       { name: "username", type: "string", unique: true },
     ],
     revLinks: [
-      { column: "user_id", table: "documents" },
-      { column: "user_id", table: "privileges" },
+      { column: "user", table: "documents" },
+      { column: "user", table: "privileges" },
     ],
   },
   {
     name: "documents",
     columns: [
-      { name: "url", type: "string", unique: true },
-      { name: "user_id", type: "link", link: { table: "users" } },
+      { name: "user", type: "link", link: { table: "users" } },
       { name: "documentPrivacy", type: "bool", defaultValue: "true" },
     ],
-    revLinks: [{ column: "document_id", table: "privileges" }],
+    revLinks: [{ column: "document", table: "privileges" }],
   },
   {
     name: "privileges",
     columns: [
-      { name: "document_id", type: "link", link: { table: "documents" } },
-      { name: "user_id", type: "link", link: { table: "users" } },
+      { name: "document", type: "link", link: { table: "documents" } },
+      { name: "user", type: "link", link: { table: "users" } },
       {
         name: "privilage_edit",
         type: "bool",

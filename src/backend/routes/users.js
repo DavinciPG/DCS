@@ -37,7 +37,8 @@ router.put('/', async (req, res) => {
         req.session.authenticated = true;
         req.session.user = {
             id: record.id,
-            username: record.username
+            username: record.username,
+            email: record.email
         }
 
         res.status(201).json({ message: 'User created.'});

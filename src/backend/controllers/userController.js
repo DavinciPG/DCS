@@ -8,7 +8,7 @@ async function verifyUsernameInput(input) {
 }
 
 async function verifyEmailInput(input) {
-    const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const regex = /^[a-zA-Z0-9._%+-]+@voco.ee/;
     if(!regex.test(input))
         return false;
 

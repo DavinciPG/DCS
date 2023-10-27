@@ -14,7 +14,11 @@ router.put('/', async (req, res) => {
 
         const validUsername = await verifyUsernameInput(username);
         if (!validUsername)
-            return res.status(400).json({message: 'Bad username.'})
+            return res.status(400).json({message: 'Bad username.'});
+
+        const existingUsername = await xata.db.users.select(['username']).filter({username: username}).getFirst();
+        if (existingUsername)
+            return res.status(400).json({message: 'Username already in use.'});
 
         const validEmail = await verifyEmailInput(email);
         if (!validEmail)
@@ -23,6 +27,10 @@ router.put('/', async (req, res) => {
         const passwordsMatch = (password === password2);
         if (!passwordsMatch)
             return res.status(400).json({ message: 'Passwords do not match.'});
+
+        const existingEmail = await xata.db.users.select(['email']).filter({email: email}).getFirst();
+        if(existingEmail)
+            return res.status(400).json({ message: 'User already exists.'});
 
         const generatedSalt = await bcrypt.genSalt(10);
         const record = await xata.db.users.create({

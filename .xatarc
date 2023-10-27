@@ -1,0 +1,7 @@
+{
+  "databaseURL": "https://Erkz-s-workspace-p75ce6.eu-central-1.xata.sh/db/DCS",
+  "codegen": {
+    "output": "src/backend/bin/xata.js",
+    "moduleType": "cjs"
+  }
+}

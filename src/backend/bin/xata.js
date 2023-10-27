@@ -23,6 +23,8 @@ const tables = [
     columns: [
       { name: "user", type: "link", link: { table: "users" } },
       { name: "documentPrivacy", type: "bool", defaultValue: "true" },
+      { name: "fileType", type: "string", defaultValue: "txt" },
+      { name: "title", type: "string", defaultValue: "Untitled Document" },
     ],
     revLinks: [{ column: "document", table: "privileges" }],
   },
@@ -32,7 +34,19 @@ const tables = [
       { name: "document", type: "link", link: { table: "documents" } },
       { name: "user", type: "link", link: { table: "users" } },
       {
-        name: "privilage_edit",
+        name: "privilege_edit",
+        type: "bool",
+        notNull: true,
+        defaultValue: "false",
+      },
+      {
+        name: "privilege_delete",
+        type: "bool",
+        notNull: true,
+        defaultValue: "false",
+      },
+      {
+        name: "privilege_view",
         type: "bool",
         notNull: true,
         defaultValue: "false",

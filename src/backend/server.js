@@ -6,12 +6,17 @@ const sessionHandler = require('express-session');
 const MongoStore = require('connect-mongo');
 const dotenv = require('dotenv');
 dotenv.config();
+const { getXataClient } = require('./bin/xata');
+const bcrypt = require('bcrypt');
+
 
 const sessionsRouter = require('./routes/sessions');
 const usersRouter = require('./routes/users');
 const documentsRouter = require('./routes/documents');
 
 const server = express();
+// Initialize the xata client
+const xata = getXataClient();
 
 // session handling
 server.use(sessionHandler({
@@ -38,6 +43,39 @@ server.use('/documents', documentsRouter);
 // Serve 'users.html' from the 'public' directory
 server.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+});
+
+server.post('/users/signin', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Find the user by email
+        const user = await xata.db.users.filter({ email }).getFirst();
+
+        if (!user) {
+            return res.status(400).json({ message: 'User not found.' });
+        }
+
+        // Check if the password is correct
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        if (!passwordMatch) {
+            return res.status(400).json({ message: 'Invalid password.' });
+        }
+
+        // Set the session to indicate that the user is authenticated
+        req.session.authenticated = true;
+        req.session.user = {
+            id: user.id,
+            username: user.username,
+            email: user.email,
+        };
+
+        res.status(200).json({ message: 'Sign-in successful.' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error.' });
+    }
 });
 
 module.exports = server;

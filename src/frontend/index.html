@@ -1,10 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <title>User Registration</title>
 </head>
 <body>
-$END$
+<div id="app">
+    <h2>User Registration</h2>
+    <form @submit.prevent="registerUser">
+        <div>
+            <label for="email">Email:</label>
+            <input type="email" id="email" v-model="formData.email" required>
+        </div>
+        <div>
+            <label for="username">Username:</label>
+            <input type="text" id="username" v-model="formData.username" required>
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="password" id="password" v-model="formData.password" required>
+        </div>
+        <div>
+            <label for="password2">Confirm Password:</label>
+            <input type="password" id="password2" v-model="formData.password2" required>
+        </div>
+        <button type="submit">Register</button>
+    </form>
+    <p v-if="message">{{ message }}</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            formData: {
+                email: "",
+                username: "",
+                password: "",
+                password2: "",
+            },
+            message: "",
+        },
+        methods: {
+            async registerUser() {
+                try {
+                    const response = await fetch("/users", {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify(this.formData),
+                    });
+
+                    const data = await response.json();
+                    if (response.status === 201) {
+                        this.message = data.message;
+                    } else {
+                        this.message = "Registration failed: " + data.message;
+                    }
+                } catch (error) {
+                    console.error(error);
+                    this.message = "Internal Server Error.";
+                }
+            },
+        },
+    });
+</script>
 </body>
 </html>

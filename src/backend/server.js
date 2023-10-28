@@ -35,4 +35,9 @@ server.use('/sessions', sessionsRouter);
 server.use('/users', usersRouter);
 server.use('/documents', documentsRouter);
 
+// Serve 'users.html' from the 'public' directory
+server.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
+});
+
 module.exports = server;

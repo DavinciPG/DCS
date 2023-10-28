@@ -47,6 +47,10 @@ server.get('/', (req, res) => {
 
 server.post('/users/signin', async (req, res) => {
     try {
+        if (req.session && req.session.authenticated) {
+            return res.status(400).json({ message: 'User is already signed in.' });
+        }
+
         const { email, password } = req.body;
 
         // Find the user by email

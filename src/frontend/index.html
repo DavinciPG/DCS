@@ -85,7 +85,7 @@
             },
             async signInUser() {
                 try {
-                    const response = await fetch("/users/signin", {
+                    const response = await fetch("/sessions", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json",
@@ -96,6 +96,9 @@
                     const data = await response.json();
                     if (response.status === 200) {
                         this.signInMessage = data.message;
+
+                        // Redirect to the dashboard page
+                        window.location.href = "/dashboard";
                     } else {
                         this.signInMessage = "Sign-in failed: " + data.message;
                     }
@@ -103,7 +106,7 @@
                     console.error(error);
                     this.signInMessage = "Internal Server Error.";
                 }
-            },
+            }
         },
     });
 </script>

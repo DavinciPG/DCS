@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h2>Dashboard</h2>
+<div id="app">
+    <button @click="logoutUser">Logout</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script>
+    new Vue({
+        el: "#app",
+        data: {
+            // properties go here!!!
+        },
+        methods: {
+            async logoutUser() {
+                try {
+                    const response = await fetch('/sessions', {
+                        method: 'DELETE',
+                    });
+
+                    if (response.status === 200) {
+                        const data = await response.json();
+                        if (data.message === 'Logged out successfully') {
+                            // Redirect to the home page
+                            window.location.href = '/';
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>
